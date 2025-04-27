@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useLoginUserMutation } from '../redux/features/auth/authApi';
 import { useNavigate } from 'react-router-dom';
+import { setUser } from '../redux/features/auth/authSlice';
 
 
 const Login = () => {
@@ -27,8 +28,8 @@ const Login = () => {
     try {
       const response = await loginUser(data).unwrap();
       // console.log(response)
-      // const { token, user } = response;
-      // dispatch(setUser({ user }));
+      const { token, user } = response;
+      dispatch(setUser({ user }));
       alert('Login successful');
       navigate('/');
 
