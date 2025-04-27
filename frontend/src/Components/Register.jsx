@@ -1,12 +1,16 @@
 /* eslint-disable react/no-unescaped-entities */
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate  } from "react-router-dom";
+import { useRegisterUserMutation } from "../redux/features/auth/authApi";
 
 const Register = () => {
   const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [password, setPassword] = useState("");
+  const [registerUser, { isLoading }] = useRegisterUserMutation();
+
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -17,8 +21,16 @@ const Register = () => {
     };
 
     console.log(data);
+
     // Set a message for successful registration (you can replace this with your logic later)
-    setMessage("Registration successful! You can now log in.");
+   // setMessage("Registration successful! You can now log in.");
+    try {
+      await registerUser(data).unwrap();
+      alert("Registration successful");
+      navigate('/login');
+    } catch (err) {
+      setMessage("Registration failed");
+    }
   };
 
   return (

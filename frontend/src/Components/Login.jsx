@@ -1,13 +1,22 @@
 /* eslint-disable react/no-unescaped-entities */
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { useLoginUserMutation } from '../redux/features/auth/authApi';
+import { useNavigate } from 'react-router-dom';
+
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = (e) => {
+  const dispatch = useDispatch();
+
+  const [loginUser, { isLoading: loginLoading }] = useLoginUserMutation();
+  const navigate = useNavigate();
+
+  const handleLogin = async(e) => {
     e.preventDefault();
     
     const data = {
@@ -15,14 +24,20 @@ const Login = () => {
       password,
     };
 
-    // Temporary message logic to simulate login functionality
-    if (email === 'test@example.com' && password === 'password') {
-      alert('Login successful!');
-      setMessage('');
-    } else {
-      setMessage('Please provide a valid email and password!');
+    try {
+      const response = await loginUser(data).unwrap();
+      // console.log(response)
+      // const { token, user } = response;
+      // dispatch(setUser({ user }));
+      alert('Login successful');
+      navigate('/');
+
+    } catch (err) {
+      setMessage("Please provide a valid email and password!");
     }
   };
+
+   
 
   return (
     <section className="h-screen flex items-center justify-center">
