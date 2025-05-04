@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import products from "../../data/products.json";
-import ProductsCards from "../shop/ProductsCards";
+import ProductsCards from "../shop/ProductCards";
 
 const CategoryPage = () => {
   const { categoryName } = useParams();

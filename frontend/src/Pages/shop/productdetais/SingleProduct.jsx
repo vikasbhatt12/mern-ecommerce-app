@@ -1,29 +1,33 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-// import RatingStars from '../../../components/RatingStars';
+import { Link, useParams } from 'react-router-dom';
+import { useFetchProductByIdQuery } from '../../../redux/features/products/productsApi';
+//import RatingStars from '../../../components/RatingStars';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../../../redux/features/cart/cartSlice';
+import ReviewsCard from '../reviews/ReviewsCard';
 
 const SingleProduct = () => {
-    // Example placeholder data
-    const singleProduct = {
-        name: "Sample Product",
-        image: "https://via.placeholder.com/300",
-        price: 100,
-        oldPrice: 120,
-        description: "This is a sample product description.",
-        category: "Electronics",
-        color: "Black",
-        rating: 4.5
+    const { id } = useParams();
+    const dispatch = useDispatch();
+
+    // Fetch product by ID using the hook
+    const { data, error, isLoading } = useFetchProductByIdQuery(id);
+
+    // Destructure and rename fields for clarity
+    const singleProduct = data?.product || {};
+    const productReviews = data?.reviews || [];
+    // console.log(productReviews)
+
+    const handleAddToCart = (product) => {
+        console.log(product)
+        dispatch(addToCart(product));
     };
 
-    // Placeholder handleAddToCart function
-    const handleAddToCart = (product) => {
-        console.log(product);
-        alert('Added to cart!');
-    };
+    if (isLoading) return <p>Loading product details...</p>;
+    if (error) return <p>Error loading product details.</p>;
 
     return (
         <>
-            <div>Shop details</div>
             <section className="section__container rounded bg-primary-light">
                 <h2 className="section__header">Single Product Page</h2>
                 <div className="section__subheader space-x-2">
@@ -60,22 +64,27 @@ const SingleProduct = () => {
                             <p><strong>Color:</strong> {singleProduct.color}</p>
                             <div className='flex gap-1 items-center'>
                                 <strong>Rating:</strong>
-                                {/* Replace this with <RatingStars rating={singleProduct.rating} /> */}
-                                <span>{singleProduct.rating} ⭐</span>
+                                {/* <RatingStars rating={singleProduct.rating} /> */}
                             </div>
                         </div>
 
                         {/* Add to Cart Button */}
                         <button
                             onClick={(e) => {
+
                                 e.stopPropagation();
-                                handleAddToCart(singleProduct);
+                                handleAddToCart(singleProduct)
                             }}
                             className="mt-6 px-6 py-3 bg-primary text-white rounded-md">
                             Add to Cart
                         </button>
                     </div>
                 </div>
+            </section>
+
+            {/* Display Reviews */}
+            <section className="section__container mt-8">
+                <ReviewsCard productReviews={productReviews}/>
             </section>
         </>
     );
