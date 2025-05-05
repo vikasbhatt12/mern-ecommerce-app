@@ -5,7 +5,7 @@ import CategoryPage from "../Pages/category/CategoryPage";
 import Search from "../Pages/search/Search";
 import ShopPage from "../Pages/shop/ShopPage";
 import SingleProduct from '../Pages/shop/productdetais/SingleProduct';
-import Login from '../components/Login';
+import Login from "../components/Login";
 import Register from '../components/Register';
 
 const router = createBrowserRouter([
