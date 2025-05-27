@@ -13,30 +13,20 @@ const router = createBrowserRouter([
     path: "/",
     element: <App />,
     children: [
+      { path: '/', element: <Home /> },
+      { path: '/categories/:categoryName', element: <CategoryPage /> },
+      { path: '/shop', element: <ShopPage /> },
+      { path: '/search', element: <Search /> },
+      { path: '/shop/:id', element: <SingleProduct /> },
       {
-        path: "/",
-        element: <Home />,
+        path: "/success",
+        element: <div>when payment succesfull</div>
+
       },
-      {
-        path: "/categories/:categoryName", 
-        element: <CategoryPage/>
-      },
-      {
-        path: "/search",
-        element: <Search/>
-      },
-      {
-        path: '/shop',
-        element: <ShopPage/>
-      }
-      ,
-      { path: '/shop/:id', 
-        element: <SingleProduct /> 
-      },
-      { path: '/login', element: <Login /> },
-      { path: '/register', element: <Register /> },
     ],
   },
+  { path: '/login', element: <Login /> },
+  { path: '/register', element: <Register /> },
 ]);
 
 export default router;

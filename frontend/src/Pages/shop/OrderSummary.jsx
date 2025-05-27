@@ -1,18 +1,53 @@
-import React from 'react'
-import { useDispatch,useSelector } from "react-redux";
+
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { clearCart } from "../../redux/features/cart/cartSlice";
+import { getBaseUrl } from "../../utils/baseURL";
+import {loadStripe} from '@stripe/stripe-js';
+
 
 const OrderSummary = () => {
-
   const dispatch = useDispatch();
-  // const { user } = useSelector((state) => state.auth);
-  // console.log(user)
+  const { user } = useSelector((state) => state.auth);
+  console.log(user)
   const products = useSelector((store) => store.cart.products);
   const { tax, taxRate, grandTotal, totalPrice, selectedItems } = useSelector((store) => store.cart)
   const handleClearCart = () => {
     dispatch(clearCart())
   }
 
+  // payment integration
+
+  const makePayment = async (e) => {
+    const stripe = await loadStripe(import.meta.env.VITE_STRIPE_PK);
+
+    const body = {
+      products: products,
+      userId: user?._id,
+    }
+
+    const headers = {
+      "Content-Type": "application/json"
+    }
+    const response = await fetch(`http://localhost:5000/api/orders/create-checkout-session`, {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(body)
+    });
+
+    const session = await response.json();
+    console.log("session", session)
+
+    const result = stripe.redirectToCheckout({
+      sessionId: session.id
+    });
+
+    console.log("Result", result)
+
+    if (result.error) {
+      console.log(result.error);
+    }
+  }
 
   return (
     <div className=" bg-primary-light mt-5 rounded text-base">
@@ -45,7 +80,10 @@ const OrderSummary = () => {
           <i className="ri-delete-bin-7-line"></i>
         </button>
         <button
-          
+          onClick={(e) => {
+            e.stopPropagation();
+            makePayment();
+          }}
           className="bg-green-600 px-3 py-1.5 text-white  mt-2 rounded-md flex justify-between items-center"
         >
           <span className="mr-2">Proceed Checkout</span>
@@ -53,7 +91,7 @@ const OrderSummary = () => {
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default OrderSummary
+export default OrderSummary;

@@ -23,12 +23,14 @@ app.use(cors({
   credentials: true,
 }));
 
+
 const authRoutes = require('./src/users/user.route');
 const productRoutes = require('./src/products/products.route');
 const reviewRoutes = require('./src/reviews/reviews.router');
+const orderRoutes = require('./src/orders/orders.route');
 
 
-
+app.use('/api/orders', orderRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/reviews', reviewRoutes);
