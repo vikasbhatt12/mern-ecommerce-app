@@ -9,6 +9,15 @@ import Login from "../components/Login";
 import Register from '../components/Register';
 import PaymentSuccess from '../components/PaymentSuccess';
 
+import DashboardLayout from '../Pages/dashboard/DashboardLayout';
+import PrivateRoute from './PrivateRoute';
+import OrderDetails from '../Pages/dashboard/users/OrderDetails';
+import UserOrders from '../Pages/dashboard/users/UserOrders';
+import UserPayments from '../Pages/dashboard/users/UserPayments' ;
+import UserDMain from '../Pages/dashboard/users/dashboard/UserDMain';
+import UserProfile from '../Pages/dashboard/users/UserProfile';
+import UserReviews from '../Pages/dashboard/users/UserReviews';
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -23,12 +32,53 @@ const router = createBrowserRouter([
         path: "/success",
         element: <PaymentSuccess />
 
-
+      },
+      {
+        path: "/orders/:orderId",
+        element: <OrderDetails />
       },
     ],
   },
   { path: '/login', element: <Login /> },
   { path: '/register', element: <Register /> },
+  {
+    path: '/dashboard',
+    element: <PrivateRoute><DashboardLayout /></PrivateRoute>,
+    children: [
+      // User routes
+      { path: '', element: <UserDMain/> },
+      { path: 'orders', element: <UserOrders /> },
+      { path: 'payments', element: <UserPayments /> },
+      {path: 'profile', element:  <UserProfile/>},
+      { path: 'reviews', element: <UserReviews/> },
+
+      // Admin routes (only accessible by admins)
+      {
+        path: 'admin',
+        element: <PrivateRoute role="admin"> AdminDMain</PrivateRoute>,
+      },
+      {
+        path: 'add-new-post',
+        element: <PrivateRoute role="admin">AddProduct</PrivateRoute>,
+      },
+      {
+        path: 'manage-products',
+        element: <PrivateRoute role="admin">ManageProducts</PrivateRoute>,
+      },
+      {
+        path: 'update-product/:id',
+        element: <PrivateRoute role="admin">UpdateProduct </PrivateRoute>,
+      },
+      {
+        path: 'users',
+        element: <PrivateRoute role="admin">ManageUser</PrivateRoute>,
+      },
+      {
+        path: 'manage-orders',
+        element: <PrivateRoute role="admin"> ManageOrders</PrivateRoute>,
+      }
+    ],
+  },
 ]);
 
 export default router;
