@@ -51,7 +51,7 @@ async function main() {
     app.get("/", (req, res) => {
       res.send("Ecommers website i am creating ");
     });
-    // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
+    
   }
 
   // upload image routes
