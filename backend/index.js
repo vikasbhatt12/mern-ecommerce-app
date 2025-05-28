@@ -5,6 +5,8 @@ require('dotenv').config()
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
+const uploadImage = require("./src/utils/uploadImage");
+
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -51,6 +53,14 @@ async function main() {
     });
     // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
   }
+
+  // upload image routes
+app.post("/uploadImage", (req, res) => {
+  uploadImage(req.body.image)
+    .then((url) => res.send(url))
+    .catch((err) => res.status(500).send(err));
+});
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
